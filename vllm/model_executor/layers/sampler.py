@@ -1161,7 +1161,8 @@ def _build_sampler_output(
                                    logprobs))
             sampler_output.append(
                 CompletionSequenceGroupOutput(seq_outputs,
-                                              group_prompt_logprobs))
+                                              group_prompt_logprobs,
+                                              None))
 
     # If not specified, store None values in SamplerOutput.
     if on_device_tensors is not None:

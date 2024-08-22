@@ -100,6 +100,7 @@ class RequestOutput:
         lora_request: Optional[LoRARequest] = None,
         encoder_prompt: Optional[str] = None,
         encoder_prompt_token_ids: Optional[List[int]] = None,
+        value_estimate: float = None
     ) -> None:
         self.request_id = request_id
         self.prompt = prompt
@@ -111,6 +112,7 @@ class RequestOutput:
         self.lora_request = lora_request
         self.encoder_prompt = encoder_prompt
         self.encoder_prompt_token_ids = encoder_prompt_token_ids
+        self.value_estimate = value_estimate
 
     @classmethod
     def from_seq_group(cls, seq_group: SequenceGroup) -> "RequestOutput":
@@ -166,7 +168,8 @@ class RequestOutput:
                    seq_group.metrics,
                    lora_request=seq_group.lora_request,
                    encoder_prompt=encoder_prompt,
-                   encoder_prompt_token_ids=encoder_prompt_token_ids)
+                   encoder_prompt_token_ids=encoder_prompt_token_ids,
+                   value_estimate=seq_group.value_estimate)
 
     def __repr__(self) -> str:
         return (f"RequestOutput(request_id={self.request_id}, "

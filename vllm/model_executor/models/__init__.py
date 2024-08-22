@@ -60,9 +60,10 @@ _GENERATION_MODELS = {
     "XverseForCausalLM": ("xverse", "XverseForCausalLM"),
     "Phi3SmallForCausalLM": ("phi3_small", "Phi3SmallForCausalLM"),
     "MedusaModel": ("medusa", "Medusa"),
-    "EAGLEModel": ("eagle", "EAGLE"),
     "MLPSpeculatorPreTrainedModel": ("mlp_speculator", "MLPSpeculator"),
     "JambaForCausalLM": ("jamba", "JambaForCausalLM"),
+    # custom
+    "AutoModelForCausalLMWithValueHead": ("modeling_value_head", "AutoModelForCausalLMWithValueHead"),
 }
 
 _EMBEDDING_MODELS = {
@@ -84,7 +85,6 @@ _MULTIMODAL_MODELS = {
     "PaliGemmaForConditionalGeneration": ("paligemma",
                                           "PaliGemmaForConditionalGeneration"),
     "Phi3VForCausalLM": ("phi3v", "Phi3VForCausalLM"),
-    "UltravoxModel": ("ultravox", "UltravoxModel"),
 }
 _CONDITIONAL_GENERATION_MODELS = {
     "BartModel": ("bart", "BartForConditionalGeneration"),

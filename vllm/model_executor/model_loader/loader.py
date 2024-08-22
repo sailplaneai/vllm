@@ -42,6 +42,7 @@ from vllm.model_executor.models.interfaces import (has_inner_state,
 from vllm.model_executor.utils import set_weight_attrs
 from vllm.platforms import current_platform
 from vllm.utils import is_pin_memory_available
+from vllm.model_executor.models import ModelRegistry
 
 
 @contextmanager
@@ -341,6 +342,8 @@ class DefaultModelLoader(BaseModelLoader):
                 model = _initialize_model(model_config, self.load_config,
                                           lora_config, cache_config,
                                           scheduler_config)
+            if hasattr(model_config.hf_config, "value_model") and model_config.hf_config.value_model:
+                model = ModelRegistry._try_load_model_cls("AutoModelForCausalLMWithValueHead")(model)
             model.load_weights(
                 self._get_weights_iterator(model_config.model,
                                            model_config.revision,
@@ -382,6 +385,8 @@ class DummyModelLoader(BaseModelLoader):
                 model = _initialize_model(model_config, self.load_config,
                                           lora_config, cache_config,
                                           scheduler_config)
+            if hasattr(model_config.hf_config, "value_model") and model_config.hf_config.value_model:
+                model = ModelRegistry._try_load_model_cls("AutoModelForCausalLMWithValueHead")(model)
             # NOTE(woosuk): For accurate performance evaluation, we assign
             # random values to the weights.
             initialize_dummy_weights(model)
@@ -427,7 +432,8 @@ class TensorizerLoader(BaseModelLoader):
             with torch.device(device_config.device):
                 model = _initialize_model(model_config, self.load_config,
                                           lora_config, cache_config)
-
+            if hasattr(model_config.hf_config, "value_model") and model_config.hf_config.value_model:
+                model = ModelRegistry._try_load_model_cls("AutoModelForCausalLMWithValueHead")(model)
             model.load_weights(self._get_weights_iterator())
         return model.eval()
 
@@ -579,6 +585,8 @@ class ShardedStateLoader(BaseModelLoader):
             with torch.device(device_config.device):
                 model = _initialize_model(model_config, self.load_config,
                                           lora_config, cache_config)
+            if hasattr(model_config.hf_config, "value_model") and model_config.hf_config.value_model:
+                model = ModelRegistry._try_load_model_cls("AutoModelForCausalLMWithValueHead")(model)
             rank = get_tensor_model_parallel_rank()
             pattern = os.path.join(
                 local_model_path,
@@ -948,7 +956,8 @@ class BitsAndBytesModelLoader(BaseModelLoader):
             with torch.device(device_config.device):
                 model = _initialize_model(model_config, self.load_config,
                                           lora_config, cache_config)
-
+                if hasattr(model_config.hf_config, "value_model") and model_config.hf_config.value_model:
+                    model = ModelRegistry._try_load_model_cls("AutoModelForCausalLMWithValueHead")(model)
                 self._load_weights(model_config, model)
 
         return model.eval()
@@ -1031,6 +1040,8 @@ class GGUFModelLoader(BaseModelLoader):
             with torch.device(device_config.device):
                 model = _initialize_model(model_config, self.load_config,
                                           lora_config, cache_config)
+            if hasattr(model_config.hf_config, "value_model") and model_config.hf_config.value_model:
+                model = ModelRegistry._try_load_model_cls("AutoModelForCausalLMWithValueHead")(model)
             model.load_weights(
                 self._get_weights_iterator(local_model_path, gguf_weights_map))
         return model

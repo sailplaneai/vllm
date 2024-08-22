@@ -1122,6 +1122,8 @@ class Scheduler:
                     if scheduler_outputs.num_prefill_groups > 0 else None,
                     prompt_adapter_request=seq_group.prompt_adapter_request,
                 )
+                if seq_group.value_estimate is not None:
+                    seq_group_metadata.value_estimate = seq_group.value_estimate
             else:
                 # When SPMD mode is enabled, we only send delta data except for
                 # the first request to reduce serialization cost.
@@ -1137,6 +1139,8 @@ class Scheduler:
                     token_chunk_size=token_chunk_size,
                     computed_block_nums=common_computed_block_nums,
                 )
+                if seq_group.value_estimate is not None:
+                    seq_group_metadata.value_estimate = seq_group.value_estimate
             seq_group_metadata_list.append(seq_group_metadata)
 
         # Now that the batch has been created, we can assume all blocks in the
